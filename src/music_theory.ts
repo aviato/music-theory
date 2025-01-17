@@ -404,7 +404,9 @@ export class Note {
     }
   }
 
-  private parseNoteName(noteName: string) {
+  private parseNoteName(
+    noteName: string,
+  ): { accidental: string; freq: number; octave: number; pitchClass: string } {
     const notePattern = /^([A-Ga-g])(#{1,3}|b{1,3})?(\d+)$/;
     const match = notePattern.exec(noteName);
 
@@ -435,7 +437,7 @@ export class Note {
     return { accidental, freq, octave, pitchClass };
   }
 
-  public getNoteIndex(note: NoteName, accidentalOffset: number = 0) {
+  public getNoteIndex(note: NoteName, accidentalOffset: number = 0): number {
     const i = NoteNames.indexOf(note);
 
     if (i === -1) {

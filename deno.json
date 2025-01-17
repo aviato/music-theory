@@ -1,4 +1,7 @@
 {
+  "name": "@aviato/music-theory",
+  "version": "0.1.0",
+  "exports": "./src/music_theory.ts",
   "tasks": {
     "dev": "deno run --watch main.ts"
   },
