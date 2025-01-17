@@ -1,10 +1,10 @@
 import {
   Fretboard,
   Interval,
-  Intervals,
   IntervalSemitones,
   Note,
   Scale,
+  ScaleTypes,
   STANDARD_GUITAR_TUNING,
 } from "./music_theory.ts";
 import { describe, it } from "jsr:@std/testing/bdd";
@@ -41,15 +41,15 @@ describe("Interval", () => {
   it("Creates M3 with the correct interval note", () => {
     const M3 = new Interval(
       new Note("C4"),
-      IntervalSemitones[Intervals.MAJOR_3RD],
+      IntervalSemitones.MAJOR_3RD,
     );
     const m7 = new Interval(
       new Note("G5"),
-      IntervalSemitones[Intervals.MINOR_7TH],
+      IntervalSemitones.MINOR_7TH,
     );
     const p5Down = new Interval(
       new Note("Bb3"),
-      IntervalSemitones[Intervals.PERFECT_5TH],
+      IntervalSemitones.PERFECT_5TH,
       "down",
       true,
     );
@@ -61,14 +61,14 @@ describe("Interval", () => {
   });
   it("Creates new notes by stringing together intervals", () => {
     const C4 = new Note("C4");
-    const M3 = new Interval(C4, IntervalSemitones[Intervals.MAJOR_3RD]); // E4
+    const M3 = new Interval(C4, IntervalSemitones.MAJOR_3RD); // E4
     const P5 = new Interval(
       M3.intervalNote,
-      IntervalSemitones[Intervals.PERFECT_5TH],
-    ); // B4
+      IntervalSemitones.PERFECT_5TH,
+    );
     const M7 = new Interval(
       P5.intervalNote,
-      IntervalSemitones[Intervals.MAJOR_7TH],
+      IntervalSemitones.MAJOR_7TH,
     );
     expect(M3.intervalNote.name).toBe("E4");
     expect(P5.intervalNote.name).toBe("B4");
@@ -83,7 +83,7 @@ describe("Chord", () => {
 describe("Scale", () => {
   it("creates a major scale when given a root and a scale type", () => {
     const root = new Note("C4");
-    const majorScale = new Scale(root, "major");
+    const majorScale = new Scale(root, ScaleTypes.MAJOR);
 
     expect(majorScale.notes[0].name).toBe("C4");
     expect(majorScale.notes[1].name).toBe("D4");
@@ -102,7 +102,7 @@ describe("Scale", () => {
   });
   it("creates a minor scale when given a root and a scale type", () => {
     const root = new Note("A4");
-    const minorScale = new Scale(root, "minor");
+    const minorScale = new Scale(root, ScaleTypes.MINOR);
 
     expect(minorScale.notes[0].name).toBe("A4");
     expect(minorScale.notes[1].name).toBe("B4");
@@ -121,7 +121,7 @@ describe("Scale", () => {
   });
   it("creates a major pentatonic scale when given a root and a scale type", () => {
     const root = new Note("C4");
-    const majorPentatonicScale = new Scale(root, "major pentatonic");
+    const majorPentatonicScale = new Scale(root, ScaleTypes.MAJOR_PENTATONIC);
 
     expect(majorPentatonicScale.notes[0].name).toBe("C4");
     expect(majorPentatonicScale.notes[1].name).toBe("D4");
@@ -136,7 +136,7 @@ describe("Scale", () => {
   });
   it("creates a minor pentatonic scale when given a root and a scale type", () => {
     const root = new Note("A4");
-    const minorPentatonicScale = new Scale(root, "minor pentatonic");
+    const minorPentatonicScale = new Scale(root, ScaleTypes.MINOR_PENTATONIC);
 
     expect(minorPentatonicScale.notes[0].name).toBe("A4");
     expect(minorPentatonicScale.notes[1].name).toBe("C5");
