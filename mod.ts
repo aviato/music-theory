@@ -1,9 +1,21 @@
 /**
- * This module provides classes and functions for working with musical notes, scales, chords, and intervals.
- * @module
+ * This module provides classes and functions for working with music theory concepts like a {@linkcode Note}, {@linkcode Interval}, {@linkcode Chord}, or {@linkcode Scale}.
+ *
+ * @example
+ * ```ts
+ * import { MajorScale, Note } from "@aviato/music-theory";
+ * const middleC = new Note("C4"); // Note { name: "C4", pitchClass: "C", octave: 4, accidental: "", freq: 261.63 }
+ * const cMajorScale = new MajorScale(middleC); // Scale { name: "Major", notes: [Note { name: "C4", pitchClass: "C", octave: 4, accidental: "", freq: 261.63 }, ...] }
+ * ```
+ *
+ * @module music-theory
  */
 
+/**
+ * Enum providing constants for the 12 musical note names
+ */
 export enum Notes {
+  C_FLAT = "Cb",
   C = "C",
   C_SHARP = "C#",
   D_FLAT = "Db",
@@ -38,10 +50,21 @@ const indexedNotes: Notes[] = [
   Notes.B,
 ];
 
+/**
+ * Keys of the Notes enum
+ */
 export type NoteNameKeys = keyof typeof Notes;
+/**
+ * Values of the Notes enum as type
+ */
 export type NoteName = (typeof Notes)[keyof typeof Notes];
+/**
+ * Array of note names (meant to be used for display purposes)
+ */
 export const NoteNames: NoteName[] = Object.values(Notes);
-
+/**
+ * Enum for working with interval names
+ */
 export enum Intervals {
   UNISON = "unison",
   MINOR_2ND = "minor 2nd",
@@ -58,10 +81,17 @@ export enum Intervals {
   MAJOR_7TH = "major 7th",
   OCTAVE = "octave",
 }
-
+/**
+ * Keys of the Intervals enum
+ */
 export type IntervalKeys = keyof typeof Intervals;
+/**
+ * Values of the Intervals enum as type
+ */
 export type IntervalValue = (typeof Intervals)[keyof typeof Intervals];
-
+/**
+ * Enum for working with interval shorthand names
+ */
 export enum IntervalShorthandNames {
   P1 = "P1",
   m2 = "m2",
@@ -96,6 +126,9 @@ const IntervalNamesToShorthand = {
   [Intervals.OCTAVE]: IntervalShorthandNames.P8,
 };
 
+/**
+ * Enum for working with interval semitone values
+ */
 export enum IntervalSemitones {
   UNISON = 0,
   MINOR_2ND = 1,
@@ -112,74 +145,18 @@ export enum IntervalSemitones {
   MAJOR_7TH = 11,
   OCTAVE = 12,
 }
-
+/**
+ * Keys of the IntervalSemitones enum
+ */
 export type SemitoneKeys = keyof typeof IntervalSemitones;
+/**
+ * Values of the IntervalSemitones enum as type
+ */
 export type SemitoneValue =
   (typeof IntervalSemitones)[keyof typeof IntervalSemitones];
-
-const getIntervalNameBySemitones = (
-  semitones: SemitoneValue,
-): IntervalValue => {
-  const intervalKeyName = Object.keys(IntervalSemitones).find(
-    (key) => IntervalSemitones[key as SemitoneKeys] === semitones,
-  );
-
-  return Intervals[intervalKeyName as IntervalKeys] as IntervalValue;
-};
-
-export const sharpToFlatMap: { [key: string]: string } = {
-  "C#": "Db",
-  "D#": "Eb",
-  "F#": "Gb",
-  "G#": "Ab",
-  "A#": "Bb",
-  "B#": "C",
-  "E#": "F",
-};
-
-export const flatToSharpMap: { [key: string]: string } = {
-  Cb: "B",
-  Db: "C#",
-  Eb: "D#",
-  Gb: "F#",
-  Ab: "G#",
-  Bb: "A#",
-  Fb: "E",
-};
-
-export const sharpKeys: string[] = [
-  "G",
-  "D",
-  "A",
-  "E",
-  "B",
-  "F#",
-  "C#",
-];
-
-export const flatKeys: string[] = [
-  "F",
-  "Bb",
-  "Eb",
-  "Ab",
-  "Db",
-  "Gb",
-  "Cb",
-];
-
-// TODO: This should be renamed if not entirely rewritten
-export function usesSharpsOrFlats(rootNote: NoteName): string {
-  if (rootNote === "C") {
-    return "none"; // C major has no sharps or flats
-  } else if (sharpKeys.includes(rootNote)) {
-    return "sharps";
-  } else if (flatKeys.includes(rootNote)) {
-    return "flats";
-  } else {
-    throw new Error(`Unknown root note: ${rootNote}`);
-  }
-}
-
+/**
+ * Enum for supported scale types
+ */
 export enum ScaleTypes {
   MAJOR = "major",
   MINOR = "minor",
@@ -189,10 +166,17 @@ export enum ScaleTypes {
   MINOR_BLUES = "minor blues",
   CHROMATIC = "chromatic",
 }
-
+/**
+ * Keys of the ScaleTypes enum
+ */
 export type ScaleTypesKeys = keyof typeof ScaleTypes;
+/**
+ * Values of the ScaleTypes enum as type
+ */
 export type ScaleTypeValue = (typeof ScaleTypes)[keyof typeof ScaleTypes];
-
+/**
+ * Object mapping scale types to their interval values
+ */
 type ScaleTypesToIntervalsObj = {
   [key in ScaleTypeValue]: number[];
 };
@@ -255,77 +239,10 @@ const ScaleTypesToIntervals: ScaleTypesToIntervalsObj = {
   ],
 };
 
-// Chord Formulas
-// TODO: Add more chord formulas like 9th, 11th, 13th, etc.
-export const MAJOR_TRIAD_FORMULA = [
-  IntervalSemitones.MAJOR_3RD,
-  IntervalSemitones.PERFECT_5TH,
-];
-
-export const MINOR_TRIAD_FORMULA = [
-  IntervalSemitones.MINOR_3RD,
-  IntervalSemitones.PERFECT_5TH,
-];
-
-export const AUGMENTED_TRIAD_FORMULA = [
-  IntervalSemitones.MAJOR_3RD,
-  IntervalSemitones.AUGMENTED_4TH,
-];
-
-export const DIMINISHED_TRIAD_FORMULA = [
-  IntervalSemitones.MINOR_3RD,
-  IntervalSemitones.DIMINISHED_5TH,
-];
-
-export const SUS2_TRIAD_FORMULA = [
-  IntervalSemitones.MAJOR_2ND,
-  IntervalSemitones.PERFECT_5TH,
-];
-
-export const SUS4_TRIAD_FORMULA = [
-  IntervalSemitones.PERFECT_4TH,
-  IntervalSemitones.PERFECT_5TH,
-];
-
-export const MAJOR_SEVENTH_FORMULA = [
-  IntervalSemitones.MAJOR_3RD,
-  IntervalSemitones.PERFECT_5TH,
-  IntervalSemitones.MAJOR_7TH,
-];
-
-export const MINOR_SEVENTH_FORMULA = [
-  IntervalSemitones.MINOR_3RD,
-  IntervalSemitones.PERFECT_5TH,
-  IntervalSemitones.MINOR_7TH,
-];
-
-export const DOMINANT_SEVENTH_FORMULA = [
-  IntervalSemitones.MAJOR_3RD,
-  IntervalSemitones.PERFECT_5TH,
-  IntervalSemitones.MINOR_7TH,
-];
-
-export const HALF_DIMINISHED_SEVENTH_FORMULA = [
-  IntervalSemitones.MINOR_3RD,
-  IntervalSemitones.DIMINISHED_5TH,
-  IntervalSemitones.MINOR_7TH,
-];
-
-export type ChordQuality =
-  | "major"
-  | "minor"
-  | "augmented"
-  | "diminished"
-  | "sus2"
-  | "sus4"
-  | "major seventh"
-  | "minor seventh"
-  | "dominant seventh"
-  | "half diminished seventh"
-  | "diminished seventh"
-  | "major ninth"
-  | "minor ninth";
-
+/**
+ * Enum for valid chord qualities
+ * NOTE some chord qualities are not yet implemented
+ */
 export enum ChordQualityNames {
   MAJOR = "major",
   MINOR = "minor",
@@ -338,20 +255,101 @@ export enum ChordQualityNames {
   DOMINANT_SEVENTH = "dominant seventh",
   HALF_DIMINISHED_SEVENTH = "half diminished seventh",
 }
-
+/**
+ * Keys of the ChordQualityNames enum
+ */
 export type ChordQualityKeys = keyof typeof ChordQualityNames;
+/**
+ * Values of the ChordQualityNames enum as type
+ */
 export type ChordQualityValue =
   (typeof ChordQualityNames)[keyof typeof ChordQualityNames];
 
-export class Note {
-  readonly pitchClass: string = ""; // Ex: "C"
-  readonly octave: number = -1;
-  readonly accidental?: string = ""; // Ex: "#" or "bb"
-  readonly freq: number = -999; // Frequency in Hz
-  readonly enharmonicSpelling?: string = ""; // Ex: "B#" or "E#"
-  readonly enharmonicNote?: Note | null = null; // Ex: new Note("B#")
-  index: number = -1; // TODO make readonly
+// Utility functions
+const getIntervalNameBySemitones = (
+  semitones: SemitoneValue,
+): IntervalValue => {
+  const intervalKeyName = Object.keys(IntervalSemitones).find(
+    (key) => IntervalSemitones[key as SemitoneKeys] === semitones,
+  );
 
+  return Intervals[intervalKeyName as IntervalKeys] as IntervalValue;
+};
+
+const flatKeys: NoteName[] = [
+  Notes.F,
+  Notes.B_FLAT,
+  Notes.E_FLAT,
+  Notes.A_FLAT,
+  Notes.D_FLAT,
+  Notes.G_FLAT,
+  Notes.C_FLAT,
+];
+
+const sharpToFlatMap: { [key: string]: string } = {
+  "C#": "Db",
+  "D#": "Eb",
+  "F#": "Gb",
+  "G#": "Ab",
+  "A#": "Bb",
+  "B#": "C",
+  "E#": "F",
+};
+
+const flatToSharpMap: { [key: string]: string } = {
+  Cb: "B",
+  Db: "C#",
+  Eb: "D#",
+  Gb: "F#",
+  Ab: "G#",
+  Bb: "A#",
+  Fb: "E",
+};
+
+/**
+ * Class representing a musical note
+ */
+export class Note {
+  /**
+   * The pitch class of the note. Ex: "C"
+   */
+  readonly pitchClass: string = "";
+  /**
+   * The octave of the note. Ex: 4
+   * Defaults to -1 to indicate an invalid octave
+   */
+  readonly octave: number = -1;
+  /**
+   * The accidental of the note. Ex: "#" or "b"
+   * Defaults to an empty string to indicate no accidental
+   */
+  readonly accidental?: string = "";
+  /**
+   * The frequency of the note in Hz
+   * Defaults to -999 to indicate an invalid frequency
+   */
+  readonly freq: number = -999;
+  /**
+   * The enharmonic spelling of the note. Ex: If pitchClass is "A#" this would be "Bb"
+   * Defaults to an empty string
+   */
+  readonly enharmonicSpelling?: string = "";
+  /**
+   * The enharmonic note object. This is the same note with a different spelling. Ex: A#4 === Bb4
+   * Defaults to null
+   */
+  readonly enharmonicNote?: Note | null = null;
+  /**
+   * The index of the note in the indexedNotes array
+   * Defaults to -1 to indicate an invalid index
+   */
+  index: number = -1;
+
+  /**
+   * Create a new Note note using the name of the note in scientific pitch notation.
+   * @param name The name of the note in scientific pitch notation. Invalid note names will throw an error.
+   * @param includeEnharmonicNote Optional parameter to include the enharmonic note in the object. Defaults to true. WARNING: this param will likely be removed in future versions and its use is discouraged.
+   */
   constructor(
     public readonly name: string,
     includeEnharmonicNote: boolean = true,
@@ -386,6 +384,11 @@ export class Note {
     }
   }
 
+  /**
+   * Parse a note name into its components. Throws errors if required information is missing or invalid.
+   * @param noteName The name of the note in scientific pitch notation
+   * @returns An object containing the note's accidental, frequency, octave, and pitch class
+   */
   private parseNoteName(
     noteName: string,
   ): { accidental: string; freq: number; octave: number; pitchClass: string } {
@@ -429,6 +432,12 @@ export class Note {
     return { accidental, freq, octave, pitchClass };
   }
 
+  /**
+   * Get the index of the note in the indexedNotes array
+   * @param note The note name to get the index of
+   * @param accidentalOffset Optional parameter to adjust the index by a number of semitones
+   * @returns The index of the note in the indexedNotes array
+   */
   public getNoteIndex(note: NoteName, accidentalOffset: number = 0): number {
     const i = indexedNotes.indexOf(note);
 
@@ -443,6 +452,13 @@ export class Note {
       : noteIndexWithOffset;
   }
 
+  /**
+   * Calculate the frequency of a note based on its pitch class, accidental, and octave
+   * @param baseNote The base note name
+   * @param accidental The accidental of the note
+   * @param octave The octave of the note
+   * @returns The frequency of the note in Hz
+   */
   private calculateFrequency(
     baseNote: NoteName,
     accidental: string = "",
@@ -474,11 +490,31 @@ export class Note {
 // TODO: refactor Interval API to allow users to pass in shorthand names
 // ex: new Interval("C4", "M3") or new Interval("C4", "major 3rd"
 // TODO: infer useFlats based on the root note's accidental
-export class Interval {
-  public intervalNote: Note;
-  public name: string = "";
-  public shorthand: string = "";
 
+/**
+ * Class representing a musical interval
+ */
+export class Interval {
+  /**
+   * The interval note created by applying the interval to the root note
+   */
+  public intervalNote: Note;
+  /**
+   * The name of the interval in long form. Ex: "major 3rd"
+   */
+  public name: string = "";
+  /**
+   * The shorthand name of the interval. Ex: "M3"
+   */
+  public shorthand: string = "";
+  /**
+   * Create a new Interval object by applying an interval to a root note
+   * @param rootNote The root note to apply the interval to
+   * @param distance The distance of the interval in semitones
+   * @param direction The direction of the interval. Defaults to "up"
+   * @param useFlats Whether to use flats in the interval. Defaults to false
+   * @returns A new Interval object
+   */
   constructor(
     public rootNote: Note,
     public distance: SemitoneValue,
@@ -535,9 +571,20 @@ export class Interval {
   }
 }
 
+/**
+ * Class representing a musical chord
+ */
 export class Chord {
+  /**
+   * The notes that make up the chord
+   */
   public notes: Note[] = [];
-
+  /**
+   * Create a new Chord object by applying a series of intervals to a root note
+   * @param rootNote The root note of the chord
+   * @param intervals The intervals to apply to the root note
+   * @returns A new Chord object
+   */
   constructor(rootNote: Note, intervals: Interval[]) {
     this.notes.push(rootNote);
 
@@ -547,14 +594,41 @@ export class Chord {
   }
 }
 
+/**
+ * Class representing a musical scale
+ */
 export class Scale {
+  /**
+   * The notes that make up the scale. Ex: [Note { name: "C4" }, ...]
+   */
   public notes: Note[] = [];
+  /**
+   * The intervals that make up the scale. Ex: [Interval { name: "M3" }, ...]
+   */
   public intervals: Interval[] = [];
+  /**
+   * The name of the scale. Ex: "Major"
+   */
   public name: string = "";
+  /**
+   * The number of flats in the scale. Defaults to 0.
+   */
   public flatsCount: number = 0;
+  /**
+   * The numbs of sharps in the scale. Defaults to 0.
+   */
   public sharpsCount: number = 0;
+  /**
+   * Whether to use flats in the scale. Defaults to false.
+   */
   public useFlats: boolean = false;
 
+  /**
+   * Create a new Scale object by applying a series of intervals to a root note
+   * @param rootNote The root note of the scale
+   * @param scaleType The type of scale to Create
+   * @returns A new Scale object
+   */
   constructor(rootNote: Note, scaleType: ScaleTypeValue) {
     this.useFlats = flatKeys.includes(
       `${rootNote.pitchClass}${rootNote.accidental}` as NoteName,
@@ -566,6 +640,11 @@ export class Scale {
     this.notes.push(...this.intervals.map((interval) => interval.intervalNote));
   }
 
+  /**
+   * Check if a note is in the scale
+   * @param note The note to Check
+   * @returns A boolean indicating whether the note is in the scale
+   */
   public hasNote(note: Note): boolean {
     if (!(note instanceof Note)) {
       console.error("Argument supplied was note an instance of Note Class.");
@@ -577,6 +656,11 @@ export class Scale {
     );
   }
 
+  /**
+   * Get the scale degree of a note
+   * @param note The note to get the scale degree of
+   * @returns The scale degree of the note
+   */
   public getScaleDegree(note: Note): number {
     const index = this.notes.findIndex((scaleNote) =>
       scaleNote.pitchClass + scaleNote.accidental ===
@@ -587,43 +671,50 @@ export class Scale {
   }
 }
 
+/**
+ * Class representing a major scale
+ */
 export class MajorScale extends Scale {
+  /**
+   * Create a new MajorScale object by applying a series of intervals to a root note
+   */
   constructor(rootNote: Note) {
     super(rootNote, ScaleTypes.MAJOR);
     this.name = "Major";
   }
 }
-
+/**
+ * Class representing a minor scale
+ */
 export class MinorScale extends Scale {
+  /**
+   * Create a new MinorScale object by applying a series of intervals to a root note
+   * @param rootNote The root note of the scale
+   * @returns A new MinorScale object
+   */
   constructor(rootNote: Note) {
     super(rootNote, ScaleTypes.MINOR);
     this.name = "Minor";
   }
 }
-
+/**
+ * Class representing the ChromaticScale
+ */
 export class ChromaticScale extends Scale {
+  /**
+   * Create a new ChromaticScale object by applying a series of intervals to a root note
+   * @param rootNote The root note of the scale
+   * @returns A new ChromaticScale object
+   */
   constructor(rootNote: Note) {
     super(rootNote, ScaleTypes.CHROMATIC);
     this.name = "Chromatic";
   }
 }
 
-export const C_MAJOR_SCALE: Scale = new MajorScale(new Note("C4"));
-export const G_MAJOR_SCALE: Scale = new MajorScale(new Note("G4"));
-export const D_MAJOR_SCALE: Scale = new MajorScale(new Note("D4"));
-export const A_MAJOR_SCALE: Scale = new MajorScale(new Note("A4"));
-export const E_MAJOR_SCALE: Scale = new MajorScale(new Note("E4"));
-export const B_MAJOR_SCALE: Scale = new MajorScale(new Note("B4"));
-export const F_SHARP_MAJOR_SCALE: Scale = new MajorScale(new Note("F#4"));
-export const C_SHARP_MAJOR_SCALE: Scale = new MajorScale(new Note("C#4"));
-export const F_MAJOR_SCALE: Scale = new MajorScale(new Note("F4"));
-export const B_FLAT_MAJOR_SCALE: Scale = new MajorScale(new Note("Bb4"));
-export const E_FLAT_MAJOR_SCALE: Scale = new MajorScale(new Note("Eb4"));
-export const A_FLAT_MAJOR_SCALE: Scale = new MajorScale(new Note("Ab4"));
-export const D_FLAT_MAJOR_SCALE: Scale = new MajorScale(new Note("Db4"));
-export const G_FLAT_MAJOR_SCALE: Scale = new MajorScale(new Note("Gb4"));
-export const C_FLAT_MAJOR_SCALE: Scale = new MajorScale(new Note("Cb4"));
-
+/**
+ * A constant for working with standard guitar tuning
+ */
 export const STANDARD_GUITAR_TUNING: Note[] = [
   new Note("E2"),
   new Note("A2"),
@@ -632,14 +723,18 @@ export const STANDARD_GUITAR_TUNING: Note[] = [
   new Note("B3"),
   new Note("E4"),
 ];
-
+/**
+ * A constant for working with standard ukulele tuning
+ */
 export const STANDARD_UKULELE_TUNING: Note[] = [
   new Note("G4"),
   new Note("C4"),
   new Note("E4"),
   new Note("A4"),
 ];
-
+/**
+ * A constant for working with standard mandolin tuning
+ */
 export const STANDARD_MANDOLIN_TUNING: Note[] = [
   new Note("G3"),
   new Note("D4"),
@@ -647,22 +742,43 @@ export const STANDARD_MANDOLIN_TUNING: Note[] = [
   new Note("E5"),
 ];
 
+/**
+ * Class representing a fretboard
+ */
 export class Fretboard {
+  /**
+   * The strings that make up the fretboard
+   */
   public strings: Note[][];
-
+  /**
+   * Create a new Fretboard object with a given tuning and number of frets
+   * @param tuning The tuning of the fretboard. Defaults to an empty array
+   * @param numFrets The number of frets on the fretboard. Defaults to 24
+   * @returns A new Fretboard object
+   */
   constructor(
     public tuning: Note[] = [],
     public numFrets: number = 24,
   ) {
     this.strings = this.buildFretboard(this.tuning, this.numFrets);
   }
-
+  /**
+   * Build the fretboard based on the tuning and number of frets
+   * @param tuning The tuning of the fretboard
+   * @param frets The number of frets on the fretboard
+   * @returns A 2D array of notes representing the fretboard
+   */
   private buildFretboard(tuning: Note[], frets: number): Note[][] {
     return tuning.map((openStringNote) =>
       this.buildStringNotes(openStringNote, frets)
     );
   }
-
+  /**
+   * Build the notes for a single string on the fretboard
+   * @param rootNote The root note of the string
+   * @param frets The number of frets on the string
+   * @returns An array of notes representing the string
+   */
   private buildStringNotes(rootNote: Note, frets: number): Note[] {
     const notes: Note[] = [rootNote];
     for (let i = 1; i < frets; i++) {
