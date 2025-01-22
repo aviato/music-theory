@@ -6,9 +6,9 @@ import {
   Scale,
   ScaleTypes,
   STANDARD_GUITAR_TUNING,
-} from "./music_theory.ts";
-import { describe, it } from "jsr:@std/testing/bdd";
-import { expect } from "jsr:@std/expect";
+} from "./mod.ts";
+import { describe, it } from "@std/testing/bdd";
+import { expect } from "@std/expect";
 
 describe("Note", () => {
   it("parseNoteName", () => {});
