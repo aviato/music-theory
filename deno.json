@@ -8,9 +8,9 @@
     "@std/testing": "jsr:@std/testing@^1.0.8"
   },
   "fmt": {
-    "ignore": [
+    "exclude": [
       ".git/",
-      ".github/",
+      ".github/"
     ]
   }
 }
