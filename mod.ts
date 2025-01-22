@@ -1,3 +1,8 @@
+/**
+ * This module provides classes and functions for working with musical notes, scales, chords, and intervals.
+ * @module
+ */
+
 export enum Notes {
   C = "C",
   C_SHARP = "C#",
