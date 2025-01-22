@@ -36,8 +36,8 @@ jobs:
       - name: Run linter
         run: deno lint
 
-      - name: Run tests
-        run: deno test -A
+      - name: Run unit tests and collect coverage
+        run: deno test --doc --clean --coverage
 
   publish:
     runs-on: ubuntu-latest
